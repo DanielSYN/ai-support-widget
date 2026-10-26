@@ -1,0 +1,211 @@
+:root {
+  color-scheme: light;
+  --accent: #4f46e5;
+  --accent-text: #ffffff;
+  --bg: #ffffff;
+  --surface: #f4f5f7;
+  --border: #e3e5e8;
+  --text: #1c1f24;
+  --muted: #6b717c;
+  --danger: #b42318;
+  --radius: 18px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  color: var(--text);
+  overflow: hidden;
+}
+
+button { font: inherit; cursor: pointer; }
+[hidden] { display: none !important; }
+
+.launcher {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-text);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.22);
+  transition: transform 0.15s ease;
+}
+.launcher:hover { transform: scale(1.06); }
+.launcher:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+
+.panel {
+  position: fixed;
+  inset: 14px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border-radius: var(--radius);
+  /* Kept inside the 14px inset: the iframe would clip anything larger into a hard edge. */
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 3px 10px rgb(0 0 0 / 0.14);
+  overflow: hidden;
+  animation: rise 0.18s ease-out;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+
+/* Full-screen on phones (widget.js decides), and when embedded inline in the admin preview. */
+body.fullscreen .panel { inset: 0; border-radius: 0; }
+body.inline .panel { inset: 0; border-radius: 0; box-shadow: none; animation: none; }
+body.inline #close { display: none; }
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px 14px 16px;
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.2);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.heading { flex: 1; min-width: 0; }
+.title { font-weight: 650; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.subtitle { font-size: 12.5px; opacity: 0.85; display: flex; align-items: center; gap: 6px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; }
+.icon-button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+}
+.icon-button:hover { background: rgb(255 255 255 / 0.15); }
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg);
+}
+
+.msg {
+  max-width: 85%;
+  padding: 9px 13px;
+  border-radius: 16px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.msg.assistant { align-self: flex-start; background: var(--surface); border-bottom-left-radius: 5px; }
+.msg.user { align-self: flex-end; background: var(--accent); color: var(--accent-text); border-bottom-right-radius: 5px; }
+.msg.error { align-self: center; background: #fef3f2; color: var(--danger); font-size: 13.5px; text-align: center; }
+.msg.notice { align-self: center; background: transparent; color: var(--muted); font-size: 13px; text-align: center; padding: 4px; }
+
+.suggest {
+  align-self: flex-start;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: var(--bg);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 14px;
+}
+.suggest:hover { background: var(--surface); }
+
+.typing { display: inline-flex; gap: 4px; align-items: center; height: 21px; }
+.typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--muted);
+  animation: blink 1.2s infinite ease-in-out;
+}
+.typing span:nth-child(2) { animation-delay: 0.15s; }
+.typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+}
+.composer textarea {
+  flex: 1;
+  resize: none;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  max-height: 120px;
+  line-height: 1.35;
+}
+textarea:focus, input:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+.send {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--accent-text);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.send:disabled { opacity: 0.5; cursor: default; }
+
+.panel-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 14px 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.link { border: 0; background: none; padding: 0; color: var(--accent); font-size: 12.5px; text-decoration: underline; }
+
+.handoff {
+  margin: 0 12px 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.handoff-title { margin: 0; font-weight: 650; }
+.handoff-text { margin: 0 0 4px; color: var(--muted); font-size: 13.5px; }
+.handoff label { font-size: 13px; font-weight: 550; }
+.optional { color: var(--muted); font-weight: 400; }
+.handoff input, .handoff textarea {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  resize: vertical;
+}
+.handoff-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.primary, .secondary { border-radius: 10px; padding: 8px 14px; font-size: 14px; }
+.primary { border: 0; background: var(--accent); color: var(--accent-text); }
+.secondary { border: 1px solid var(--border); background: var(--bg); color: var(--text); }

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Support Widget · Dashboard</title>
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+  <div id="login-view" class="login" hidden>
+    <form id="login-form" class="card login-card">
+      <div class="brand big"><span class="logo" aria-hidden="true">💬</span> Support Widget</div>
+      <p class="muted">Sign in to manage your chat bots.</p>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <p id="login-error" class="error" hidden></p>
+      <button class="btn primary" type="submit">Sign in</button>
+    </form>
+  </div>
+
+  <div id="app-view" hidden>
+    <header class="topbar">
+      <div class="brand"><span class="logo" aria-hidden="true">💬</span> Support Widget</div>
+      <label class="bot-picker">
+        <span class="visually-hidden">Bot</span>
+        <select id="bot-select"></select>
+      </label>
+      <button id="new-bot" class="btn" type="button">+ New bot</button>
+      <span class="spacer"></span>
+      <span id="mode-badge" class="badge"></span>
+      <button id="logout" class="btn ghost" type="button">Log out</button>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" data-tab="overview">Overview</button>
+      <button role="tab" data-tab="knowledge">Knowledge</button>
+      <button role="tab" data-tab="conversations">Conversations</button>
+      <button role="tab" data-tab="inbox">Inbox <span id="inbox-count" class="count" hidden></span></button>
+      <button role="tab" data-tab="settings">Settings</button>
+    </nav>
+
+    <main>
+      <section id="tab-overview" class="tab" role="tabpanel" hidden>
+        <div id="stats" class="stats"></div>
+        <div class="grid-2">
+          <div class="stack">
+            <div class="card">
+              <h2>Install on your website</h2>
+              <p class="muted">Paste this just before <code>&lt;/body&gt;</code> on every page where the chat should appear.</p>
+              <pre id="snippet" class="snippet"></pre>
+              <div class="row">
+                <button id="copy-snippet" class="btn primary" type="button">Copy code</button>
+              </div>
+              <p class="hint">The widget only loads on websites listed in <a href="#settings">Settings → Allowed websites</a>.
+                Copying the code onto any other site won't work.</p>
+            </div>
+            <div class="card">
+              <h2>How it answers</h2>
+              <p class="muted">The bot replies using only your <a href="#knowledge">FAQs and information</a>.
+                When it doesn't know, it says so and the question shows up in your <a href="#inbox">Inbox</a> so you can add an answer.</p>
+            </div>
+          </div>
+          <div class="card preview-card">
+            <div class="row between">
+              <h2>Try it</h2>
+              <button id="reset-preview" class="btn ghost small" type="button">Start over</button>
+            </div>
+            <iframe id="preview" title="Chat preview"></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-knowledge" class="tab" role="tabpanel" hidden>
+        <div class="card">
+          <h2>FAQs</h2>
+          <p class="muted">Short question-and-answer pairs. The clearest way to teach the bot.</p>
+          <form id="faq-add" class="faq-form">
+            <label for="faq-question">Question</label>
+            <input id="faq-question" required maxlength="500" placeholder="e.g. Do you offer gift wrapping?">
+            <label for="faq-answer">Answer</label>
+            <textarea id="faq-answer" required maxlength="3000" rows="3"></textarea>
+            <div class="row"><button class="btn primary" type="submit">Add FAQ</button></div>
+          </form>
+          <div id="faq-list" class="faq-list"></div>
+        </div>
+        <div class="card">
+          <h2>Other information</h2>
+          <p class="muted">Policies, opening hours, warranty terms: anything customers might ask about.
+            Paste it in or import a .txt or .md file.</p>
+          <textarea id="extra-info" rows="12" maxlength="50000"></textarea>
+          <div class="row between">
+            <span class="row">
+              <label class="btn" for="import-file">Import file</label>
+              <input id="import-file" type="file" accept=".txt,.md,text/plain,text/markdown" class="visually-hidden">
+              <span id="extra-count" class="muted small-text"></span>
+            </span>
+            <button id="save-extra" class="btn primary" type="button">Save</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-conversations" class="tab" role="tabpanel" hidden>
+        <div class="split">
+          <div class="card list-card">
+            <h2>Conversations</h2>
+            <div id="conversation-list" class="conversation-list"></div>
+          </div>
+          <div class="card">
+            <div id="transcript" class="transcript"><p class="muted">Select a conversation.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-inbox" class="tab" role="tabpanel" hidden>
+        <div class="card">
+          <h2>Customers waiting for a person</h2>
+          <div id="handoff-list"></div>
+        </div>
+        <div class="card">
+          <h2>Questions the bot couldn't answer</h2>
+          <p class="muted">Add an FAQ for these and the bot will answer them next time.</p>
+          <div id="unanswered-list"></div>
+        </div>
+      </section>
+
+      <section id="tab-settings" class="tab" role="tabpanel" hidden>
+        <form id="settings-form" class="card settings">
+          <h2>Settings</h2>
+          <label for="s-name">Business name</label>
+          <input id="s-name" required maxlength="100">
+          <label for="s-greeting">Greeting</label>
+          <input id="s-greeting" required maxlength="300">
+          <label for="s-color">Brand colour</label>
+          <input id="s-color" type="color">
+          <label for="s-origins">Allowed websites</label>
+          <textarea id="s-origins" rows="4" placeholder="https://www.example.com"></textarea>
+          <p class="hint">One per line, like <code>https://www.example.com</code>. The chat only appears on these sites.
+            Include both <code>www.</code> and non-<code>www.</code> versions if your site uses both.</p>
+          <label for="s-cap">Monthly message limit</label>
+          <input id="s-cap" type="number" min="0" max="1000000" required>
+          <p class="hint">Stops the bot once it has sent this many replies in a calendar month, so your AI bill can't run away.</p>
+          <div class="row"><button class="btn primary" type="submit">Save settings</button></div>
+        </form>
+        <div class="card danger-zone">
+          <h2>Delete this bot</h2>
+          <p class="muted">Removes its FAQs, conversations and inbox. This can't be undone.</p>
+          <button id="delete-bot" class="btn danger" type="button">Delete bot</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="new-bot-dialog">
+    <form id="new-bot-form" class="dialog-form">
+      <h2>New bot</h2>
+      <label for="nb-name">Business name</label>
+      <input id="nb-name" required maxlength="100" placeholder="Acme Bakery">
+      <label for="nb-id">Bot ID</label>
+      <input id="nb-id" required pattern="[a-z0-9][a-z0-9\-]{1,62}" placeholder="acme-bakery">
+      <p class="hint">Lowercase letters, numbers and dashes. Used in the install code.</p>
+      <p id="new-bot-error" class="error" hidden></p>
+      <div class="row end">
+        <button id="new-bot-cancel" class="btn ghost" type="button">Cancel</button>
+        <button class="btn primary" type="submit">Create</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script src="/static/admin.js"></script>
+</body>
+</html>

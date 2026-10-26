@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Support chat</title>
+  <link rel="stylesheet" href="/static/chat.css">
+</head>
+<body>
+  <button id="launcher" class="launcher" type="button" aria-label="Open support chat" aria-expanded="false">
+    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm3 6.5a1.5 1.5 0 1 0 0 .01Zm5 0a1.5 1.5 0 1 0 0 .01Zm5 0a1.5 1.5 0 1 0 0 .01Z"/></svg>
+  </button>
+
+  <section id="panel" class="panel" aria-label="Support chat" hidden>
+    <header class="panel-header">
+      <div class="avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>
+      </div>
+      <div class="heading">
+        <div id="bot-name" class="title">Support</div>
+        <div class="subtitle"><span class="dot"></span>AI assistant · replies instantly</div>
+      </div>
+      <button id="close" class="icon-button" type="button" aria-label="Close chat">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </header>
+
+    <div id="messages" class="messages" role="log" aria-live="polite"></div>
+
+    <form id="handoff" class="handoff" hidden>
+      <p class="handoff-title">Talk to a person</p>
+      <p class="handoff-text">Leave your email and the team will reply as soon as they can.</p>
+      <label for="handoff-email">Email</label>
+      <input id="handoff-email" type="email" required maxlength="254" autocomplete="email" placeholder="you@example.com">
+      <label for="handoff-note">What do you need help with? <span class="optional">(optional)</span></label>
+      <textarea id="handoff-note" rows="2" maxlength="2000"></textarea>
+      <div class="handoff-actions">
+        <button id="handoff-cancel" type="button" class="secondary">Cancel</button>
+        <button type="submit" class="primary">Send to the team</button>
+      </div>
+    </form>
+
+    <form id="composer" class="composer">
+      <textarea id="input" rows="1" maxlength="2000" placeholder="Ask a question…" aria-label="Your message"></textarea>
+      <button id="send" type="submit" class="send" aria-label="Send message">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>
+      </button>
+    </form>
+
+    <footer class="panel-footer">
+      <button id="human" type="button" class="link">Talk to a person</button>
+      <span>AI answers can be wrong</span>
+    </footer>
+  </section>
+
+  <script src="/static/chat.js"></script>
+</body>
+</html>
